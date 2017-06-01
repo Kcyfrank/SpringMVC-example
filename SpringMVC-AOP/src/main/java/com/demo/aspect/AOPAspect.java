@@ -34,7 +34,21 @@ public class AOPAspect {
     public void beforVisitHello(){
         log.error("***** before visitHelloController *****");
     }
-    
+
+    /**
+     * within 匹配特定路径范围下的所有 join point
+     * 当前 within 匹配 controller 包下已 yController 结尾的类/包下的所有方法
+     * 而 @Pointcut("within(com.demo)")  匹配 整个 demo 包下的所有方法
+     */
+    @Pointcut("within(com.demo.controller.*yController)")
+    public void showWithin() {
+
+    }
+
+    @Before("showWithin()")
+    public void beforShowWithin() {
+        log.error("**** before showWithin ****");
+    }
 
     //this this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of).
 

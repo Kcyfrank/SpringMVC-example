@@ -21,7 +21,7 @@ public class HelloController {
     @ResponseBody
     @RequestMapping("/hello")
     public String hello() {
-        log.error("/hello/hello");
+        log.error("path: A:Hello! B:Hello to you too!");
         return "received";
     }
 
@@ -32,7 +32,7 @@ public class HelloController {
     @ResponseBody
     @RequestMapping("/java")
     protected String helloJava() {
-        log.error("/hello/java");
+        log.error("path: Hello Java!");
         return "received";
     }
 }
