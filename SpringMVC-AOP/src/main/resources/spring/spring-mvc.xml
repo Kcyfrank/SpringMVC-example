@@ -20,8 +20,8 @@
     </context:component-scan>
 
     <!-- 启用 @Aspect -->
-    <!--<aop:aspectj-autoproxy proxy-target-class="true" />-->
-    <aop:aspectj-autoproxy/>
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <!--<aop:aspectj-autoproxy/>-->
 
     <!-- 对静态资源文件的访问方案 默认 -->
     <mvc:default-servlet-handler />

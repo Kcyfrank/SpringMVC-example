@@ -54,8 +54,7 @@ public class AOPAspect {
     }
 
     /**
-     * this 匹配当前AOP代理对象类型的执行方法；注意是AOP代理对象的类型匹配，
-     * 这样就可能包括引入接口方法也可以匹配类型；
+     * this 匹配 bean (Spring AOP proxy)；
      * 注意this中使用的表达式必须是类型全限定名，不支持通配符；
      */
     @Before("this(com.demo.service.IThisService)")
@@ -63,16 +62,16 @@ public class AOPAspect {
         log.error("**** before showThis ****");
     }
 
-
-
-
-
-
-
-
-    //this this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of).
-
-    //target target 匹配的是一个目标对象(target object, 即需要织入 advice 的原始的类), 此对象是一个给定类型的实例(instance of).
+    /**
+     * target 匹配当前目标对象(target object, 即需要织入 advice 的原始的类)
+     * TODO this与target的差别
+     *      target  - pointcut 所选取的Join point 的所有者，直白点说就是： 指明拦截的方法属于那个类。
+     *      this    - pointcut 所选取的Join point 的调用的所有者，就是说：方法是在那个类中被调用的
+     */
+//    @Before("target(com.demo.service.IThisService)")
+//    public void showTarget() {
+//        log.error("**** before showTarget ****");
+//    }
 
     //args 限制匹配连接点（使用Spring AOP时执行方法），其中参数是给定类型的实例
         //with args 参数位置
