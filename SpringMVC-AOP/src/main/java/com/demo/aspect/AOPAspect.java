@@ -1,7 +1,6 @@
 package com.demo.aspect;
 
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -16,9 +15,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AOPAspect {
 
+    public AOPAspect() {
+        log.error("**** init AOPAspect ****");
+    }
 
     /**
-     * execution 匹配所有目标类符合表示式的方法. aop 中最主要的 pointcut 标志符.
+     * execution 匹配所有目标类符合表示式的**方法**. aop 中最主要的 pointcut 标志符.
+     * 例：execution(* hello*(..)) 匹配任意方法名以 hello 开头的方法
      * 当前 expression 匹配 HelloController 中所有的 public 方法
      */
     @Pointcut("execution(public * com.demo.controller.HelloController.*(..))")
@@ -37,8 +40,8 @@ public class AOPAspect {
 
     /**
      * within 匹配特定路径范围下的所有 join point
+     * 例 @Pointcut("within(com.demo)")  匹配 整个 demo 包下的所有方法
      * 当前 within 匹配 controller 包下已 yController 结尾的类/包下的所有方法
-     * 而 @Pointcut("within(com.demo)")  匹配 整个 demo 包下的所有方法
      */
     @Pointcut("within(com.demo.controller.*yController)")
     public void showWithin() {
@@ -49,6 +52,23 @@ public class AOPAspect {
     public void beforShowWithin() {
         log.error("**** before showWithin ****");
     }
+
+    /**
+     * this 匹配当前AOP代理对象类型的执行方法；注意是AOP代理对象的类型匹配，
+     * 这样就可能包括引入接口方法也可以匹配类型；
+     * 注意this中使用的表达式必须是类型全限定名，不支持通配符；
+     */
+    @Before("this(com.demo.service.IThisService)")
+    public void showThis() {
+        log.error("**** before showThis ****");
+    }
+
+
+
+
+
+
+
 
     //this this 的作用是匹配一个 bean, 这个 bean(Spring AOP proxy) 是一个给定类型的实例(instance of).
 
