@@ -102,7 +102,13 @@ public class AOPAspect {
         log.error("*** beforeArgsTwo ***" + cat);
     }
 
-    //bean 匹配 bean 名字为指定值的 bean 下的所有方法.
+    /**
+     * bean 匹配 bean 名字为指定值的 bean 下的所有方法
+     */
+    @Before(value="bean(beanController)")
+    public void beforeBean() {
+        log.error("*** beforeBean ***");
+    }
 
     //@target 匹配的对象具有一个指定的 annotation. 执行对象的类具有给定类型的注释
 
@@ -112,16 +118,6 @@ public class AOPAspect {
 
     //@annotation   匹配由指定注解所标注的方法
     //get annotation
-
-
-    //before
-    //after
-    //afterreturn
-    //afterthrowing
-    //around
-    //returning
-
-
 
     //get class
 }
