@@ -30,4 +30,18 @@ public class ThisController {
         return "received";
     }
 
+    @ResponseBody
+    @RequestMapping("/sheep")
+    public String sheep(String sheep) {
+        thisService.sheep(sheep);
+        return "received";
+    }
+
+    @ResponseBody
+    @RequestMapping("/cat")
+    public String cat(String sheep, String cat, int num) {
+        log.error("Pussycat，pussycat，where have you been？");
+        return "received";
+    }
+
 }

@@ -6,4 +6,6 @@ package com.demo.service;
 public interface IThisService {
 
     void cheese();
+
+    void sheep(String sheep);
 }

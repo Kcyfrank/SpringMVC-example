@@ -23,10 +23,11 @@ public class AOPAspect {
      * execution 匹配所有目标类符合表示式的**方法**. aop 中最主要的 pointcut 标志符.
      * 例：execution(* hello*(..)) 匹配任意方法名以 hello 开头的方法
      * 当前 expression 匹配 HelloController 中所有的 public 方法
+     * 注： （）代表匹配的方法的参数 * 代表一个任意类型参数 .. 代表任意数量参数
      */
     @Pointcut("execution(public * com.demo.controller.HelloController.*(..))")
     public void visitHello() {
-            //连接点只能为方法
+            //存在 @Pointcut 注解的方法不执行方法体，只表示切入点的入口
             log.error("****** visitHello  *****");
     }
 
@@ -57,8 +58,12 @@ public class AOPAspect {
      * this 匹配 bean (Spring AOP proxy)；
      * 注意this中使用的表达式必须是类型全限定名，不支持通配符；
      */
-    @Before("this(com.demo.service.IThisService)")
+    @Pointcut("this(com.demo.service.IThisService)")
     public void showThis() {
+    }
+
+    @Before("showThis()")
+    public void beforShowThis() {
         log.error("**** before showThis ****");
     }
 
@@ -73,8 +78,29 @@ public class AOPAspect {
 //        log.error("**** before showTarget ****");
 //    }
 
-    //args 限制匹配连接点（使用Spring AOP时执行方法），其中参数是给定类型的实例
-        //with args 参数位置
+    @Pointcut("execution(* com.demo.controller.*.*(*))")
+    public void thisController() {
+    }
+
+    /**
+     * args 匹配参数满足要求的的方法
+     * 当前 匹配 thisController 下 仅包含一个参数 x 的方法
+     * args 不匹配参数名称，仅匹配类型与参数顺序
+     */
+    @Before(value = "thisController()  &&  args(cat)")
+    public void beforeArgsOne(String cat) {
+        log.error("*** beforeArgsOne ***  arg = " + cat);
+    }
+
+    // 匹配第一个参数为 String 类型的所有方法
+    // @Before(value = "thisController()  &&  args(cat, ..)")
+    /**
+     * 当前 匹配 thisController 下 第二个参数为 String 类型的执行方法
+     */
+    @Before(value = "thisController() && args(*, cat, ..)")
+    public void beforeArgsTwo(String cat) {
+        log.error("*** beforeArgsTwo ***" + cat);
+    }
 
     //bean 匹配 bean 名字为指定值的 bean 下的所有方法.
 
