@@ -15,8 +15,11 @@ public class BeautyController {
 
     @ResponseBody
     @RequestMapping("beast")
-    public String beast() {
+    public String beast(boolean boo) {
         log.error("path: beauty & beast");
-        return "received";
+        if (boo) {
+            return "received";
+        }
+        throw new RuntimeException("Tale as old as time, true as it can be.");
     }
 }

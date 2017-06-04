@@ -1,6 +1,12 @@
 package com.demo.aspect;
 
+import com.demo.annotation.AopClassAnno;
+import com.demo.annotation.AopMethodAnno;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -22,10 +28,10 @@ public class AOPAspect {
     /**
      * execution 匹配所有目标类符合表示式的**方法**. aop 中最主要的 pointcut 标志符.
      * 例：execution(* hello*(..)) 匹配任意方法名以 hello 开头的方法
-     * 当前 expression 匹配 HelloController 中所有的 public 方法
+     * 当前 expression 匹配 HelloController 中的 public hello方法
      * 注： （）代表匹配的方法的参数 * 代表一个任意类型参数 .. 代表任意数量参数
      */
-    @Pointcut("execution(public * com.demo.controller.HelloController.*(..))")
+    @Pointcut("execution(public * com.demo.controller.HelloController.hello(..))")
     public void visitHello() {
             //存在 @Pointcut 注解的方法不执行方法体，只表示切入点的入口
             log.error("****** visitHello  *****");
@@ -49,9 +55,28 @@ public class AOPAspect {
 
     }
 
-    @Before("showWithin()")
-    public void beforShowWithin() {
-        log.error("**** before showWithin ****");
+    /**
+     * 当前 joinpoint 执行后 执行
+     */
+    @After("showWithin()")
+    public void aftershowWithin() {
+        log.error("**** After showWithin ****");
+    }
+
+    /**
+     * 当前 joinPoint 成功返回后 执行
+     */
+    @AfterReturning(pointcut = "showWithin()", returning="retVal")
+    public void afterReturnShowWithin(Object retVal) {
+        log.error("**** afterReturning showWithin **** " + (String) retVal);
+    }
+
+    /**
+     * 当前 joinPoint 抛出异常后执行
+     */
+    @AfterThrowing(pointcut = "showWithin()", throwing="ex")
+    public void afterThrowinghowWithin(RuntimeException ex) {
+        log.error("**** AfterThrowing showWithin ****  " + ex);
     }
 
     /**
@@ -69,16 +94,16 @@ public class AOPAspect {
 
     /**
      * target 匹配当前目标对象(target object, 即需要织入 advice 的原始的类)
-     * TODO this与target的差别
-     *      target  - pointcut 所选取的Join point 的所有者，直白点说就是： 指明拦截的方法属于那个类。
-     *      this    - pointcut 所选取的Join point 的调用的所有者，就是说：方法是在那个类中被调用的
+     * TODO this与target的差别？
+     *      bean
+     *      target object
      */
 //    @Before("target(com.demo.service.IThisService)")
 //    public void showTarget() {
 //        log.error("**** before showTarget ****");
 //    }
 
-    @Pointcut("execution(* com.demo.controller.*.*(*))")
+    @Pointcut("execution(* com.demo.controller.*.*(..))")
     public void thisController() {
     }
 
@@ -111,13 +136,46 @@ public class AOPAspect {
     }
 
     //@target 匹配的对象具有一个指定的 annotation. 执行对象的类具有给定类型的注释
+//    @Pointcut("@target(org.springframework.transaction.annotation.Transactional))")
+//    public void whileTransactional() {
+//    }
+
+
+    /**
+     * @within   类型拥有@target描述中给出的annotation,
+     * 其中@target和@within的区别在于@within要求的annotation的级别为CLASS，
+     *                                          而@target为RUNTIME
+     *
+     * 当前匹配类上存在 aopClassAnno 注解且执行 world 方法时
+     */
+//    @Before("@within(com.demo.annotation.AopClassAnno) && execution(* world(..))")
+//    public void withinTransactional(JoinPoint jp) {
+//        //获取类上的注解
+//        AopClassAnno anno = jp.getTarget().getClass().getAnnotation(AopClassAnno.class);
+//        log.error("*** anno param *** " + anno.testString());
+//        //获取当前切入点的参数 获取的都是object 需要已知类型才能获取
+//        log.error("*** first param *** " + (String)jp.getArgs()[0]);
+//        log.error("*** sec param *** " + (int)jp.getArgs()[1]);
+//        log.error("*** third param *** " + (String)jp.getArgs()[2]);
+//        log.error("*****Before advise, signature: " + jp.getSignature().toLongString() + " *****");
+//        log.error("*****Before advise, signature: " + jp.getSignature().toShortString() + " *****");
+//    }
 
     //@args 方法运行时传入的参数的实际类型拥有@args描述中给出的annotation
 
-    //@within   类型拥有@target描述中给出的annotation,其中@target和@within的区别在于@within要求的annotation的级别为CLASS，而@target为RUNTIME
+    //@Pointcut("@args(org.springframework.web.bind.annotation.RequestParam)")
+//    public void markByRequestParam() {
+//    }
 
-    //@annotation   匹配由指定注解所标注的方法
-    //get annotation
 
-    //get class
+    /**
+     * @annotation   匹配由指定注解所标注的 *方法*  并获取当前注解的内容
+     * 当前匹配 AopMethodAnno 注解并把当前注解作为参数传入
+     */
+//    @After("@annotation(anno)")
+//    public void annoByTransactional(AopMethodAnno anno) {
+//        log.error("***  " + anno.testString() + "  ***");
+//    }
+
+
 }

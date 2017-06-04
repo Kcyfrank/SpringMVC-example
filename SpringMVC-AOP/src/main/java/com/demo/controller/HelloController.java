@@ -1,5 +1,7 @@
 package com.demo.controller;
 
+import com.demo.annotation.AopClassAnno;
+import com.demo.annotation.AopMethodAnno;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @Slf4j
 @RequestMapping("/hello")
+@AopClassAnno(testString = "testClassAnno")
 public class HelloController {
 
     /**
@@ -25,10 +28,18 @@ public class HelloController {
         return "received";
     }
 
+    @ResponseBody
+    @RequestMapping("/world")
+    public String world(String prarm1, int param2, String param3) {
+        log.error("path: Hello World!");
+        return "received";
+    }
+
     /**
      * HelloController 下的 protected 方法
      * @return
      */
+    @AopMethodAnno(testString = "is a test")
     @ResponseBody
     @RequestMapping("/java")
     protected String helloJava() {

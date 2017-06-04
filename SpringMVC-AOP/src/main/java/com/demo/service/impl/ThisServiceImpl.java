@@ -19,6 +19,5 @@ public class ThisServiceImpl implements IThisService {
     @Override
     public void sheep(String sheep) {
         log.error(sheep + ": One sheep, Two sheep, Three sheep...");
-
     }
 }
